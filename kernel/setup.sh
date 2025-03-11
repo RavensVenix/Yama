@@ -45,8 +45,8 @@ randomize_driver_and_module() {
         random_name=$(tr -dc 'a-z' </dev/urandom | head -c 6)
     fi
 
-    sed -i "s/#define DEVICE_NAME \".*\"/#define DEVICE_NAME \"$random_name\"/" "$GKI_ROOT/MemKernel/kernel/entry.c"
-    sed -i "s|#define DEVICE_NAME \"/dev/.*\"|#define DEVICE_NAME \"/dev/$random_name\"|" "$GKI_ROOT/MemKernel/user/driver.hpp"
+    sed -i "s/#define DEVICE_NAME \".*\"/#define DEVICE_NAME \"$random_name\"/" "$GKI_ROOT/Yama/kernel/entry.c"
+    sed -i "s|#define DEVICE_NAME \"/dev/.*\"|#define DEVICE_NAME \"/dev/$random_name\"|" "$GKI_ROOT/Yama/user/driver.hpp"
 
     if [ "$2" = "M" ]; then
         sed -i "s/yama.o/${random_name}_memk.o/" "$GKI_ROOT/Yama/kernel/Makefile"
