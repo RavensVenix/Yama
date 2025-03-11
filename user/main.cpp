@@ -32,7 +32,11 @@ int main(int argc, char const *argv[])
 	uint64_t result = 0;
 	char module_name[0x100] = "libunity.so";
 	pid_t pid = get_name_pid((char *)"com.tencent.tmgp.sgame");
-	printf("pid = %d\n", pid);
+	if (pid <= 0) {
+		printf("[-] Failed to find PID\n");
+		return -1;
+	}
+	printf("[+] Found PID: %d\n", pid);
 
 	driver->initialize(pid);
 
@@ -45,6 +49,11 @@ int main(int argc, char const *argv[])
 		for (size_t i = 0; i < number; i++)
 		{
 			result = driver->read<uint64_t>(base);
+			if (result == 0) {
+				printf("[-] Failed to read memory at address: %lx\n", base);
+			} else {
+				printf("[+] Memory read success: %lx\n", result);
+			}
 		}
 		printf("Read %ld times cost = %lfs\n", number,
 			   (double)(get_tick_count64() - now) / 1000);

@@ -4,7 +4,7 @@
 #include <cstring>
 #include <cstdio>
 
-#define DEVICE_NAME "/dev/phmeop"
+#define DEVICE_NAME "/dev/Yama"
 
 class MemKDriver {
 private:
@@ -53,6 +53,9 @@ public:
 		if (!buffer || fd == -1) return -1;
 
 		CopyMemory cm = { pid, addr, buffer, size };
+		if (!buffer || size == 0) {
+			return -1;
+		}
 		return ioctl(fd, OP_READ_MEM, &cm);
 	}
 
@@ -79,7 +82,9 @@ public:
 		if (!name || fd == -1) return 0;
 
 		ModuleBase mb = { pid, nullptr, 0 };
-		mb.name = const_cast<char *>(name);
+		char name_copy[0x100] = {0};
+		strncpy(name_copy, name, sizeof(name_copy) - 1);
+		mb.name = name_copy;
 
 		return (ioctl(fd, OP_MODULE_BASE, &mb) == 0) ? mb.base : 0;
 	}
